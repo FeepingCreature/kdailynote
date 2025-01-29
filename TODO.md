@@ -14,6 +14,7 @@ When you make a change that implements a TODO, remember to also change this file
 - [ ] Add LICENSE (GPL3)
 
 ## UI Improvements
+- [ ] Context menu for tray icon
 - [ ] Implement proper theming integration with KDE
 - [ ] Add visual feedback for current format state (B icon toggled when in bold mode, etc)
 - [x] Add keyboard shortcuts for formatting (Ctrl+B, Ctrl+I, etc.)
