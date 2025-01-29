@@ -22,7 +22,7 @@ DiaryEditor::DiaryEditor(QWidget *parent)
     setWidget(containerWidget);
     
     // Setup layout
-    layout->setSpacing(10);
+    layout->setSpacing(5);
     layout->setContentsMargins(10, 10, 10, 10);
     
     loadContent();
@@ -104,8 +104,11 @@ QString DiaryEditor::serializeContent() const
     QMapIterator<QDate, DayEditor*> it(editors);
     while (it.hasNext()) {
         it.next();
-        result += QStringLiteral("# %1\n").arg(it.key().toString(Qt::ISODate));
-        result += it.value()->content();
+        result += QStringLiteral("# %1\n\n").arg(it.key().toString(Qt::ISODate));
+        QString content = it.value()->content();
+        // Ensure paragraphs are separated by double newlines
+        content.replace(QStringLiteral("\n"), QStringLiteral("\n\n"));
+        result += content;
         result += QStringLiteral("\n\n");
     }
     return result;
