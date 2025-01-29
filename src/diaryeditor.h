@@ -1,18 +1,13 @@
 #pragma once
 
-#include <KTextEdit>
-#include <QDate>
+#include <QScrollArea>
+#include <QVBoxLayout>
 #include <QTimer>
 #include <QMap>
+#include <QDate>
+#include "dayeditor.h"
 
-class DiarySection {
-public:
-    DiarySection() = default;
-    explicit DiarySection(const QString &content) : content(content) {}
-    QString content;
-};
-
-class DiaryEditor : public KTextEdit
+class DiaryEditor : public QScrollArea
 {
     Q_OBJECT
 
@@ -27,13 +22,12 @@ public Q_SLOTS:
     void toggleItalic();
     void toggleUnderline();
 
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
-
 private:
     QString contentFile;
     QTimer *autoSaveTimer;
-    QMap<QDate, DiarySection> sections;
+    QWidget *containerWidget;
+    QVBoxLayout *layout;
+    QMap<QDate, DayEditor*> editors;
     
     void checkAndUpdateDate();
     bool skipDateHeader() const { return property("skipDateHeader").toBool(); }
@@ -41,9 +35,10 @@ private:
     QString serializeContent() const;
     bool hasSection(const QDate &date) const;
     void setupAutoSave();
+    DayEditor* createDayEditor(const QDate &date);
+    DayEditor* getCurrentEditor();
+
 private Q_SLOTS:
-    void onTextChanged();
-    void insertDateHeader(const QDate &date);
-    bool checkListContext();
-    void handleListContinuation();
+    void onEditorChanged();
+    void addDateHeader(const QDate &date);
 };

@@ -14,6 +14,11 @@ public:
     void setContent(const QString &content);
     QString content() const;
 
+public Q_SLOTS:
+    void toggleBold();
+    void toggleItalic();
+    void toggleUnderline();
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 

@@ -9,6 +9,7 @@ DayEditor::DayEditor(const QDate &date, QWidget *parent)
     setAcceptRichText(true);
     setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     setLineWrapMode(QTextEdit::WidgetWidth);
+    setMinimumHeight(100);
 }
 
 void DayEditor::setContent(const QString &content)
@@ -99,4 +100,38 @@ void DayEditor::handleListContinuation()
     } else {
         cursor.insertText(QStringLiteral("\n - "));
     }
+}
+void DayEditor::toggleBold()
+{
+    QTextCursor cursor = textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    bool wasBold = (format.fontWeight() == QFont::Bold);
+    
+    format.setFontWeight(wasBold ? QFont::Normal : QFont::Bold);
+    cursor.mergeCharFormat(format);
+    
+    // Set the default format for future input
+    setCurrentCharFormat(format);
+}
+
+void DayEditor::toggleItalic()
+{
+    QTextCursor cursor = textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    format.setFontItalic(!format.fontItalic());
+    cursor.mergeCharFormat(format);
+    
+    // Set the default format for future input
+    setCurrentCharFormat(format);
+}
+
+void DayEditor::toggleUnderline()
+{
+    QTextCursor cursor = textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    format.setFontUnderline(!format.fontUnderline());
+    cursor.mergeCharFormat(format);
+    
+    // Set the default format for future input
+    setCurrentCharFormat(format);
 }
