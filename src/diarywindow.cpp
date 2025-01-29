@@ -94,19 +94,28 @@ void DiaryWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void DiaryWindow::positionWindow()
 {
     QRect trayIconGeom = trayIcon->geometry();
+    qDebug() << "Tray icon geometry:" << trayIconGeom;
+    
     QScreen *screen = QGuiApplication::screenAt(trayIconGeom.center());
     if (!screen) {
         screen = QGuiApplication::primaryScreen();
+        qDebug() << "Using primary screen (no screen at tray position)";
     }
 
     // Get screen geometry in global coordinates
     QRect screenGeom = screen->geometry();
+    qDebug() << "Screen geometry:" << screenGeom;
     
     // Find which edge the tray is closest to
     int distToRight = screenGeom.right() - trayIconGeom.right();
     int distToLeft = trayIconGeom.left() - screenGeom.left();
     int distToTop = trayIconGeom.top() - screenGeom.top();
     int distToBottom = screenGeom.bottom() - trayIconGeom.bottom();
+    
+    qDebug() << "Distances to edges - Right:" << distToRight 
+             << "Left:" << distToLeft 
+             << "Top:" << distToTop 
+             << "Bottom:" << distToBottom;
     
     QPoint pos;
     
@@ -115,18 +124,22 @@ void DiaryWindow::positionWindow()
         // Tray is on right edge
         pos.setX(trayIconGeom.left() - width() - 5);
         pos.setY(trayIconGeom.top());
+        qDebug() << "Positioning for right edge";
     } else if (distToLeft < distToTop && distToLeft < distToBottom) {
         // Tray is on left edge
         pos.setX(trayIconGeom.right() + 5);
         pos.setY(trayIconGeom.top());
+        qDebug() << "Positioning for left edge";
     } else if (distToTop < distToBottom) {
         // Tray is on top edge
         pos.setX(trayIconGeom.left());
         pos.setY(trayIconGeom.bottom() + 5);
+        qDebug() << "Positioning for top edge";
     } else {
         // Tray is on bottom edge (or default)
         pos.setX(trayIconGeom.left());
         pos.setY(trayIconGeom.top() - height() - 5);
+        qDebug() << "Positioning for bottom edge";
     }
     
     // Ensure window stays within screen bounds
@@ -143,6 +156,7 @@ void DiaryWindow::positionWindow()
         pos.setY(screenGeom.top());
     }
     
+    qDebug() << "Final position:" << pos;
     move(pos);
 }
 
