@@ -2,28 +2,27 @@
 
 When you make a change that implements a TODO, remember to also change this file to check it off!
 
-## Critical/Next Steps
-- [ ] Implement markdown save/load (translate to/from text segments)
+## Next Steps
+- [x] Implement markdown save/load (translate to/from text segments)
 - [x] Autosave
-- [ ] Format bar (MVP bold, italic, underline, numbered list, bullet list)
+- [x] Format bar (MVP bold, italic, underline)
 - [ ] Recognize Markdown formatting commands as they are entered
     (for instance, *italic*<-format italic when * is pressed)
 - [ ] Handle text formatting state properly
+- [x] Add date header protection (prevent editing/deleting the timestamp itself)
 - [ ] Pretty up the date header
-- [ ] Add proper date header protection (prevent editing/deleting the timestamp itself)
-- [ ] Implement proper window positioning relative to system tray
-- [ ] Close on focus loss.
+- [x] Implement proper window positioning relative to system tray
+- [x] Close on focus loss.
 - [ ] Add README.md
 - [ ] Add LICENSE (GPL3)
 
 ## UI Improvements
-- [ ] Add a minimal title bar with close button
-- [ ] Add configuration for window size/position memory
 - [ ] Implement proper theming integration with KDE
-- [ ] Add visual feedback for current format state
+- [ ] Add visual feedback for current format state (B icon toggled when in bold mode, etc)
 - [x] Add keyboard shortcuts for formatting (Ctrl+B, Ctrl+I, etc.)
 
 ## Features
+- [ ] Numbered lists, bullet lists
 - [ ] Implement search functionality (Ctrl+F)
 
 ## Technical Debt

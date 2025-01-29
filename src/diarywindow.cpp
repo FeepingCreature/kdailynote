@@ -94,17 +94,13 @@ void DiaryWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void DiaryWindow::positionWindow()
 {
     QPoint cursorPos = QCursor::pos();
-    qDebug() << "Cursor position:" << cursorPos;
-    
     QScreen *screen = QGuiApplication::screenAt(cursorPos);
     if (!screen) {
         screen = QGuiApplication::primaryScreen();
-        qDebug() << "Using primary screen (no screen at cursor position)";
     }
 
     // Get screen geometry in global coordinates
     QRect screenGeom = screen->geometry();
-    qDebug() << "Screen geometry:" << screenGeom;
     
     QPoint pos;
     
@@ -127,7 +123,6 @@ void DiaryWindow::positionWindow()
         pos.setY(screenGeom.top());
     }
     
-    qDebug() << "Final position:" << pos;
     move(pos);
 }
 
