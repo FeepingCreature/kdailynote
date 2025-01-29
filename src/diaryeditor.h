@@ -21,14 +21,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
-    enum class FormatState {
-        Normal,
-        Bold,
-        Italic,
-        Underline
-    };
-
-    FormatState currentFormatState;
     QString contentFile;
     QDate lastOpenedDate;
 

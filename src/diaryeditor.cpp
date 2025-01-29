@@ -7,7 +7,6 @@
 
 DiaryEditor::DiaryEditor(QWidget *parent)
     : KTextEdit(parent)
-    , currentFormatState(FormatState::Normal)
 {
     setAcceptRichText(true);
 
@@ -61,11 +60,6 @@ void DiaryEditor::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    // Clear format state on cursor movement
-    if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
-        currentFormatState = FormatState::Normal;
-    }
-
     KTextEdit::keyPressEvent(event);
 }
 
@@ -96,57 +90,23 @@ void DiaryEditor::handleListContinuation()
 void DiaryEditor::toggleBold()
 {
     QTextCursor cursor = textCursor();
-    if (cursor.hasSelection()) {
-        // Normalize selection direction
-        int start = cursor.selectionStart();
-        int end = cursor.selectionEnd();
-        cursor.setPosition(start);
-        cursor.setPosition(end, QTextCursor::KeepAnchor);
-        
-        QTextCharFormat format;
-        format.setFontWeight(cursor.charFormat().fontWeight() == QFont::Bold ?
-                           QFont::Normal : QFont::Bold);
-        cursor.mergeCharFormat(format);
-    } else {
-        currentFormatState = (currentFormatState == FormatState::Bold) ?
-                           FormatState::Normal : FormatState::Bold;
-    }
+    QTextCharFormat format = cursor.charFormat();
+    format.setFontWeight(format.fontWeight() == QFont::Bold ? QFont::Normal : QFont::Bold);
+    cursor.mergeCharFormat(format);
 }
 
 void DiaryEditor::toggleItalic()
 {
     QTextCursor cursor = textCursor();
-    if (cursor.hasSelection()) {
-        // Normalize selection direction
-        int start = cursor.selectionStart();
-        int end = cursor.selectionEnd();
-        cursor.setPosition(start);
-        cursor.setPosition(end, QTextCursor::KeepAnchor);
-        
-        QTextCharFormat format;
-        format.setFontItalic(!cursor.charFormat().fontItalic());
-        cursor.mergeCharFormat(format);
-    } else {
-        currentFormatState = (currentFormatState == FormatState::Italic) ?
-                           FormatState::Normal : FormatState::Italic;
-    }
+    QTextCharFormat format = cursor.charFormat();
+    format.setFontItalic(!format.fontItalic());
+    cursor.mergeCharFormat(format);
 }
 
 void DiaryEditor::toggleUnderline()
 {
     QTextCursor cursor = textCursor();
-    if (cursor.hasSelection()) {
-        // Normalize selection direction
-        int start = cursor.selectionStart();
-        int end = cursor.selectionEnd();
-        cursor.setPosition(start);
-        cursor.setPosition(end, QTextCursor::KeepAnchor);
-        
-        QTextCharFormat format;
-        format.setFontUnderline(!cursor.charFormat().fontUnderline());
-        cursor.mergeCharFormat(format);
-    } else {
-        currentFormatState = (currentFormatState == FormatState::Underline) ?
-                           FormatState::Normal : FormatState::Underline;
-    }
+    QTextCharFormat format = cursor.charFormat();
+    format.setFontUnderline(!format.fontUnderline());
+    cursor.mergeCharFormat(format);
 }
