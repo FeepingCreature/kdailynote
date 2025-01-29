@@ -107,6 +107,9 @@ void DiaryEditor::toggleBold()
     format.setFontWeight(wasBold ? QFont::Normal : QFont::Bold);
     cursor.mergeCharFormat(format);
     
+    // Set the default format for future input
+    setCurrentCharFormat(format);
+    
     // Check the result
     format = cursor.charFormat();
     qDebug() << "After toggle - New weight:" << format.fontWeight()
