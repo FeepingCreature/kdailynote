@@ -20,11 +20,12 @@ void TestDiaryEditor::testMarkdownConversion()
     // Create a temporary file with markdown content
     QTemporaryFile tempFile;
     tempFile.open();
-    tempFile.write("This is **bold** and *italic* and _underlined_ text");
+    tempFile.write(QStringLiteral("This is **bold** and *italic* and _underlined_ text").toUtf8());
     tempFile.close();
     
     // Point editor to our test file
-    editor.setProperty("contentFile", tempFile.fileName());
+    editor.setContentFile(tempFile.fileName());
+    editor.document()->setModified(false);  // Reset modified state
     
     // Load and test conversion
     editor.loadContent();

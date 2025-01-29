@@ -29,15 +29,20 @@ void DiaryEditor::loadContent()
         QString markdown = QString::fromUtf8(file.readAll());
         
         // Convert markdown formatting to rich text
-        QString html = markdown;
+        QString html = QStringLiteral("<!DOCTYPE HTML><html><body>");
+        html += markdown;
         html.replace(QRegularExpression(QStringLiteral("\\*\\*(.+?)\\*\\*")), 
                     QStringLiteral("<b>\\1</b>"));
         html.replace(QRegularExpression(QStringLiteral("\\*(.+?)\\*")), 
                     QStringLiteral("<i>\\1</i>"));
         html.replace(QRegularExpression(QStringLiteral("_(.+?)_")), 
                     QStringLiteral("<u>\\1</u>"));
+        html += QStringLiteral("</body></html>");
         
+        // Clear and set the new content
+        clear();
         setHtml(html);
+        document()->setModified(false);
         parseContent(toPlainText());
     }
 }

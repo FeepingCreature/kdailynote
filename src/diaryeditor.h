@@ -20,6 +20,7 @@ public:
     DiaryEditor(QWidget *parent = nullptr);
     void saveContent();
     void loadContent();
+    void setContentFile(const QString &path) { contentFile = path; }
 
 public Q_SLOTS:
     void toggleBold();
