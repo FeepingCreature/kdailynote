@@ -152,7 +152,7 @@ DayEditor* DiaryEditor::createDayEditor(const QDate &date)
     layout->addWidget(editor);
     
     connect(editor, &DayEditor::textChanged, this, &DiaryEditor::onEditorChanged);
-    connect(editor, &DayEditor::navigateToDate, this, &DiaryEditor::onNavigateToDate);
+    connect(editor, &DayEditor::navigate, this, &DiaryEditor::onNavigate);
     
     return editor;
 }
@@ -209,19 +209,34 @@ DayEditor* DiaryEditor::getLatestEditor() const
     return editors.last();
 }
 
-void DiaryEditor::onNavigateToDate(const QDate &date, const QDate &fromDate)
+void DiaryEditor::onNavigate(bool forward)
 {
-    if (!editors.contains(date)) {
-        addDateHeader(date);
-        createDayEditor(date);
-    }
-    
-    if (DayEditor *editor = editors.value(date)) {
-        editor->setFocus();
-        QTextCursor cursor = editor->textCursor();
-        // When going back, position at end; when going forward, position at start
-        cursor.movePosition(date > m_date ? QTextCursor::Start : QTextCursor::End);
-        editor->setTextCursor(cursor);
-        ensureWidgetVisible(editor);
+    DayEditor* current = getCurrentEditor();
+    if (!current)
+        return;
+
+    QMapIterator<QDate, DayEditor*> it(editors);
+    // Find current editor's position
+    while (it.hasNext()) {
+        it.next();
+        if (it.value() == current) {
+            // Move to next/previous editor
+            if (forward && it.hasNext()) {
+                it.next();
+                it.value()->setFocus();
+                QTextCursor cursor = it.value()->textCursor();
+                cursor.movePosition(QTextCursor::Start);
+                it.value()->setTextCursor(cursor);
+                ensureWidgetVisible(it.value());
+            } else if (!forward && it.hasPrevious()) {
+                it.previous();
+                it.value()->setFocus();
+                QTextCursor cursor = it.value()->textCursor();
+                cursor.movePosition(QTextCursor::End);
+                it.value()->setTextCursor(cursor);
+                ensureWidgetVisible(it.value());
+            }
+            break;
+        }
     }
 }

@@ -123,7 +123,7 @@ void DayEditor::keyPressEvent(QKeyEvent *event)
         QTextCursor cursor = textCursor();
         QTextBlock currentBlock = cursor.block();
         if (currentBlock == document()->firstBlock()) {
-            Q_EMIT navigateToDate(m_date.addDays(-1), m_date);
+            Q_EMIT navigate(false);
             return;
         }
     }
@@ -132,7 +132,7 @@ void DayEditor::keyPressEvent(QKeyEvent *event)
         QTextCursor cursor = textCursor();
         QTextBlock currentBlock = cursor.block();
         if (currentBlock == document()->lastBlock() && cursor.atBlockEnd()) {
-            Q_EMIT navigateToDate(m_date.addDays(1), m_date);
+            Q_EMIT navigate(true);
             return;
         }
     }
