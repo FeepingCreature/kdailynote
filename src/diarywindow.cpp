@@ -33,10 +33,15 @@ void DiaryWindow::setupUI()
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(1, 1, 1, 1);
 
-    // Add toolbar with frame
+    // Add framed toolbar
+    QFrame *toolbarFrame = new QFrame(this);
+    toolbarFrame->setFrameStyle(QFrame::Panel | QFrame::Raised);
+    QVBoxLayout *frameLayout = new QVBoxLayout(toolbarFrame);
+    frameLayout->setContentsMargins(1, 1, 1, 1);
+    
     QToolBar *toolbar = new QToolBar(this);
-    toolbar->setFrameStyle(QFrame::Panel | QFrame::Raised);
-    layout->addWidget(toolbar);
+    frameLayout->addWidget(toolbar);
+    layout->addWidget(toolbarFrame);
 
     // Add editor
     editor = new DiaryEditor(this);
