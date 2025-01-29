@@ -138,8 +138,11 @@ void DayEditor::keyPressEvent(QKeyEvent *event)
 
 void DayEditor::focusOutEvent(QFocusEvent *event)
 {
+    // Only handle focus out if it's going outside our window
+    if (!window()->isAncestorOf(QApplication::focusWidget())) {
+        window()->hide();
+    }
     KTextEdit::focusOutEvent(event);
-    window()->hide();
 }
 
 void DayEditor::resizeEvent(QResizeEvent *event)

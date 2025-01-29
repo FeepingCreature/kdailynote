@@ -79,12 +79,13 @@ void DiaryWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
             raise();
             activateWindow();
             
-            // Focus the latest day
+            // Focus and scroll to the latest day
             if (auto latestEditor = editor->getLatestEditor()) {
                 latestEditor->setFocus();
                 QTextCursor cursor = latestEditor->textCursor();
                 cursor.movePosition(QTextCursor::End);
                 latestEditor->setTextCursor(cursor);
+                editor->ensureWidgetVisible(latestEditor);
             }
         }
     }
@@ -93,27 +94,55 @@ void DiaryWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void DiaryWindow::positionWindow()
 {
     QRect trayIconGeom = trayIcon->geometry();
-    QPoint pos = trayIconGeom.topLeft();
-
-    QScreen *screen = QGuiApplication::screenAt(pos);
+    QScreen *screen = QGuiApplication::screenAt(trayIconGeom.center());
     if (!screen) {
         screen = QGuiApplication::primaryScreen();
-        pos = screen->geometry().topRight();
     }
 
-    // Check if the tray icon is on a vertical panel
-    bool isVertical = trayIconGeom.height() > trayIconGeom.width();
-
-    if (isVertical) {
-        // Position window to the right of the icon
+    // Get screen geometry in global coordinates
+    QRect screenGeom = screen->geometry();
+    
+    // Find which edge the tray is closest to
+    int distToRight = screenGeom.right() - trayIconGeom.right();
+    int distToLeft = trayIconGeom.left() - screenGeom.left();
+    int distToTop = trayIconGeom.top() - screenGeom.top();
+    int distToBottom = screenGeom.bottom() - trayIconGeom.bottom();
+    
+    QPoint pos;
+    
+    // Position based on which screen edge is closest
+    if (distToRight < distToLeft && distToRight < distToTop && distToRight < distToBottom) {
+        // Tray is on right edge
+        pos.setX(trayIconGeom.left() - width() - 5);
+        pos.setY(trayIconGeom.top());
+    } else if (distToLeft < distToTop && distToLeft < distToBottom) {
+        // Tray is on left edge
         pos.setX(trayIconGeom.right() + 5);
         pos.setY(trayIconGeom.top());
+    } else if (distToTop < distToBottom) {
+        // Tray is on top edge
+        pos.setX(trayIconGeom.left());
+        pos.setY(trayIconGeom.bottom() + 5);
     } else {
-        // Position window above the icon
-        pos.setY(pos.y() - height());
-        pos.setX(pos.x() - width() + trayIconGeom.width());
+        // Tray is on bottom edge (or default)
+        pos.setX(trayIconGeom.left());
+        pos.setY(trayIconGeom.top() - height() - 5);
     }
-
+    
+    // Ensure window stays within screen bounds
+    if (pos.x() + width() > screenGeom.right()) {
+        pos.setX(screenGeom.right() - width());
+    }
+    if (pos.x() < screenGeom.left()) {
+        pos.setX(screenGeom.left());
+    }
+    if (pos.y() + height() > screenGeom.bottom()) {
+        pos.setY(screenGeom.bottom() - height());
+    }
+    if (pos.y() < screenGeom.top()) {
+        pos.setY(screenGeom.top());
+    }
+    
     move(pos);
 }
 
