@@ -152,6 +152,7 @@ DayEditor* DiaryEditor::createDayEditor(const QDate &date)
     layout->addWidget(editor);
     
     connect(editor, &DayEditor::textChanged, this, &DiaryEditor::onEditorChanged);
+    connect(editor, &DayEditor::navigateToDate, this, &DiaryEditor::onNavigateToDate);
     
     return editor;
 }
@@ -199,4 +200,20 @@ void DiaryEditor::onEditorChanged()
 {
     // Restart inactivity timer
     autoSaveTimer->start();
+}
+
+void DiaryEditor::onNavigateToDate(const QDate &date)
+{
+    if (!editors.contains(date)) {
+        addDateHeader(date);
+        createDayEditor(date);
+    }
+    
+    if (DayEditor *editor = editors.value(date)) {
+        editor->setFocus();
+        QTextCursor cursor = editor->textCursor();
+        cursor.movePosition(date < QDate::currentDate() ? QTextCursor::End : QTextCursor::Start);
+        editor->setTextCursor(cursor);
+        ensureWidgetVisible(editor);
+    }
 }

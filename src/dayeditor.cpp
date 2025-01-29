@@ -17,13 +17,23 @@ void DayEditor::setContent(const QString &content)
 {
     // Convert markdown formatting to rich text
     QString html = QStringLiteral("<!DOCTYPE HTML><html><body>");
-    html += content;
-    html.replace(QRegularExpression(QStringLiteral("\\*\\*(.+?)\\*\\*")), 
-                QStringLiteral("<b>\\1</b>"));
-    html.replace(QRegularExpression(QStringLiteral("\\*(.+?)\\*")), 
-                QStringLiteral("<i>\\1</i>"));
-    html.replace(QRegularExpression(QStringLiteral("_(.+?)_")), 
-                QStringLiteral("<u>\\1</u>"));
+    
+    // Split content into paragraphs on double newlines
+    QStringList paragraphs = content.split(QRegularExpression(QStringLiteral("\n\\s*\n")));
+    for (int i = 0; i < paragraphs.size(); ++i) {
+        QString para = paragraphs[i].trimmed();
+        if (!para.isEmpty()) {
+            // Apply formatting
+            para.replace(QRegularExpression(QStringLiteral("\\*\\*(.+?)\\*\\*")), 
+                        QStringLiteral("<b>\\1</b>"));
+            para.replace(QRegularExpression(QStringLiteral("\\*(.+?)\\*")), 
+                        QStringLiteral("<i>\\1</i>"));
+            para.replace(QRegularExpression(QStringLiteral("_(.+?)_")), 
+                        QStringLiteral("<u>\\1</u>"));
+            html += QStringLiteral("<p>") + para + QStringLiteral("</p>");
+        }
+    }
+    
     html += QStringLiteral("</body></html>");
     
     setHtml(html);
@@ -76,7 +86,31 @@ void DayEditor::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    if (event->key() == Qt::Key_Up && textCursor().atStart()) {
+        Q_EMIT navigateToDate(m_date.addDays(-1));
+        return;
+    }
+
+    if (event->key() == Qt::Key_Down && textCursor().atEnd()) {
+        Q_EMIT navigateToDate(m_date.addDays(1));
+        return;
+    }
+
     KTextEdit::keyPressEvent(event);
+}
+
+void DayEditor::resizeEvent(QResizeEvent *event)
+{
+    KTextEdit::resizeEvent(event);
+    updateGeometry();
+}
+
+void DayEditor::updateGeometry()
+{
+    // Calculate required height based on content
+    int docHeight = document()->size().height();
+    setMinimumHeight(docHeight + 20); // Add some padding
+    setMaximumHeight(docHeight + 20);
 }
 
 bool DayEditor::checkListContext()

@@ -43,4 +43,5 @@ public:
 
 private Q_SLOTS:
     void onEditorChanged();
+    void onNavigateToDate(const QDate &date);
 };

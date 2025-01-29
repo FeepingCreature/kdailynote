@@ -19,11 +19,16 @@ public Q_SLOTS:
     void toggleItalic();
     void toggleUnderline();
 
+Q_SIGNALS:
+    void navigateToDate(const QDate &date);
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     QDate m_date;
+    void updateGeometry();
     
     bool checkListContext();
     void handleListContinuation();
