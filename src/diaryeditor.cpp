@@ -4,6 +4,7 @@
 #include <QStandardPaths>
 #include <QFile>
 #include <QDir>
+#include <QDebug>
 
 DiaryEditor::DiaryEditor(QWidget *parent)
     : KTextEdit(parent)
@@ -60,7 +61,15 @@ void DiaryEditor::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    QTextCharFormat format = textCursor().charFormat();
+    qDebug() << "Before keypress - Format weight:" << format.fontWeight()
+             << "Is bold:" << (format.fontWeight() == QFont::Bold);
+
     KTextEdit::keyPressEvent(event);
+
+    format = textCursor().charFormat();
+    qDebug() << "After keypress - Format weight:" << format.fontWeight()
+             << "Is bold:" << (format.fontWeight() == QFont::Bold);
 }
 
 bool DiaryEditor::checkListContext()
@@ -91,8 +100,17 @@ void DiaryEditor::toggleBold()
 {
     QTextCursor cursor = textCursor();
     QTextCharFormat format = cursor.charFormat();
-    format.setFontWeight(format.fontWeight() == QFont::Bold ? QFont::Normal : QFont::Bold);
+    bool wasBold = (format.fontWeight() == QFont::Bold);
+    qDebug() << "Toggle Bold - Current weight:" << format.fontWeight() 
+             << "Was bold:" << wasBold;
+    
+    format.setFontWeight(wasBold ? QFont::Normal : QFont::Bold);
     cursor.mergeCharFormat(format);
+    
+    // Check the result
+    format = cursor.charFormat();
+    qDebug() << "After toggle - New weight:" << format.fontWeight()
+             << "Is bold:" << (format.fontWeight() == QFont::Bold);
 }
 
 void DiaryEditor::toggleItalic()
