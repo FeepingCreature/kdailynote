@@ -35,11 +35,12 @@ private:
     QString serializeContent() const;
     bool hasSection(const QDate &date) const;
     void setupAutoSave();
-    DayEditor* createDayEditor(const QDate &date);
     DayEditor* getCurrentEditor();
+
+protected: // Make these protected for testing
+    void addDateHeader(const QDate &date);
+    DayEditor* createDayEditor(const QDate &date);
 
 private Q_SLOTS:
     void onEditorChanged();
-    void addDateHeader(const QDate &date);
-    DayEditor* createDayEditor(const QDate &date);
 };
