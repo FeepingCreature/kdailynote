@@ -128,7 +128,18 @@ void DayEditor::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    if (event->key() == Qt::Key_Escape) {
+        window()->hide();
+        return;
+    }
+
     KTextEdit::keyPressEvent(event);
+}
+
+void DayEditor::focusOutEvent(QFocusEvent *event)
+{
+    KTextEdit::focusOutEvent(event);
+    window()->hide();
 }
 
 void DayEditor::resizeEvent(QResizeEvent *event)

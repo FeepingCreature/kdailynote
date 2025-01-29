@@ -99,3 +99,18 @@ void DiaryWindow::positionWindow()
 
     move(pos);
 }
+
+void DiaryWindow::focusOutEvent(QFocusEvent *event)
+{
+    hide();
+    QWidget::focusOutEvent(event);
+}
+
+void DiaryWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        hide();
+        return;
+    }
+    QWidget::keyPressEvent(event);
+}

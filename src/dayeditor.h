@@ -25,6 +25,7 @@ Q_SIGNALS:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void focusOutEvent(QFocusEvent *event) override;
 
 private:
     QDate m_date;

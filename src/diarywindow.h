@@ -12,6 +12,10 @@ public:
     DiaryWindow(QWidget *parent = nullptr);
     ~DiaryWindow();
 
+protected:
+    void focusOutEvent(QFocusEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+
 private Q_SLOTS:
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void positionWindow();
