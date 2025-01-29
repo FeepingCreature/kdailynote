@@ -12,6 +12,8 @@ DayEditor::DayEditor(const QDate &date, QWidget *parent)
     setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     setLineWrapMode(QTextEdit::WidgetWidth);
     setMinimumHeight(100);
+    
+    connect(document(), &QTextDocument::contentsChanged, this, &DayEditor::updateGeometry);
 }
 
 void DayEditor::setContent(const QString &content)
@@ -164,8 +166,9 @@ void DayEditor::updateGeometry()
 {
     // Calculate required height based on content
     int docHeight = document()->size().height();
-    setMinimumHeight(docHeight + 20); // Add some padding
-    setMaximumHeight(docHeight + 20);
+    int newHeight = qMax(100, docHeight + 20); // Minimum 100px, plus padding
+    setMinimumHeight(newHeight);
+    setMaximumHeight(newHeight);
 }
 
 bool DayEditor::checkListContext()
