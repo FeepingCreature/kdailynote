@@ -10,8 +10,8 @@ When you make a change that implements a TODO, remember to also change this file
 - [x] Pretty up the date header
 - [x] Implement proper window positioning relative to system tray
 - [x] Close on focus loss.
-- [ ] Add README.md
-- [ ] Add LICENSE (GPL3)
+- [x] Add README.md
+- [x] Add LICENSE (GPL3)
 
 ## UI Improvements
 - [ ] Context menu for tray icon
