@@ -7,7 +7,7 @@ When you make a change that implements a TODO, remember to also change this file
 - [x] Autosave
 - [x] Format bar (MVP bold, italic, underline)
 - [x] Add date header protection (prevent editing/deleting the timestamp itself)
-- [ ] Pretty up the date header
+- [x] Pretty up the date header
 - [x] Implement proper window positioning relative to system tray
 - [x] Close on focus loss.
 - [ ] Add README.md

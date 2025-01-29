@@ -132,18 +132,23 @@ bool DiaryEditor::hasSection(const QDate &date) const
 void DiaryEditor::addDateHeader(const QDate &date)
 {
     QLabel *dateLabel = new QLabel(date.toString(Qt::ISODate), containerWidget);
-    dateLabel->setAlignment(Qt::AlignCenter);
+    dateLabel->setAlignment(Qt::AlignLeft);
     
     // Style the date header
     QFont font = dateLabel->font();
     font.setBold(true);
-    font.setPointSize(font.pointSize() + 2);
+    font.setPointSize(font.pointSize() + 1);
     dateLabel->setFont(font);
     
-    // Use system highlight color for date headers
+    // Use system colors with reduced opacity for date headers
     QPalette p = dateLabel->palette();
-    p.setColor(QPalette::WindowText, p.color(QPalette::Highlight));
+    QColor textColor = p.color(QPalette::WindowText);
+    textColor.setAlpha(180);  // 70% opacity
+    p.setColor(QPalette::WindowText, textColor);
     dateLabel->setPalette(p);
+    
+    // Add bottom border
+    dateLabel->setStyleSheet(QStringLiteral("QLabel { border-bottom: 1px solid rgba(128, 128, 128, 0.3); }"));
     
     // Add some vertical spacing
     layout->addSpacing(10);
