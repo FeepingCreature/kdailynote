@@ -4,6 +4,10 @@ A simple diary that lives in your system tray.
 
 Contents are autosaved at `~/.local/share/kdailynote/diary.md`.
 
+## AI Notice
+
+This project was created by Claude 3.5 Sonnet (Anthropic). Thanks Claude!
+
 ## Requirements
 
 - Qt 6.4 or later
