@@ -33,7 +33,7 @@ void DayEditor::setContent(const QString &content)
                         QStringLiteral("<i>\\1</i>"));
             para.replace(QRegularExpression(QStringLiteral("_(.+?)_")), 
                         QStringLiteral("<u>\\1</u>"));
-            html += QStringLiteral("<p>") + para + QStringLiteral("</p>");
+            html += QStringLiteral("<p style=\"margin: 1px 0;\">") + para + QStringLiteral("</p>");
         }
     }
     
