@@ -1,7 +1,6 @@
 Repository Notes
 ===============
 
-Code Style
----------
-- Always wrap string literals in QStringLiteral() so Qt6 doesn't get mad.
-  Example: QStringLiteral("some text") instead of "some text"
+- Remember to wrap string literals in QStringLiteral() when constructing a method that takes QString,
+  so Qt6 doesn't get mad. Example: Widget(QStringLiteral("some text"))
+
