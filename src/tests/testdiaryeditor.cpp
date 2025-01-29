@@ -114,6 +114,27 @@ void TestDiaryEditor::testRichTextConversion()
     QVERIFY2(savedContent.contains(QStringLiteral("_underlined_")),
              qPrintable(QStringLiteral("Expected to find '_underlined_' in: '%1'")
                        .arg(savedContent)));
+
+    // Test that spaces around formatted text are not included in formatting
+    cursor.movePosition(QTextCursor::End);
+    cursor.insertText(QStringLiteral("\n\nTest "));
+    
+    boldFormat.setFontWeight(QFont::Bold);
+    cursor.setCharFormat(boldFormat);
+    cursor.insertText(QStringLiteral(" bold spaces "));
+    
+    cursor.setCharFormat(QTextCharFormat());
+    cursor.insertText(QStringLiteral(" here"));
+    
+    editor.saveContent();
+    
+    tempFile.open();
+    savedContent = QString::fromUtf8(tempFile.readAll());
+    tempFile.close();
+    
+    QVERIFY2(savedContent.contains(QStringLiteral("Test **bold spaces** here")),
+             qPrintable(QStringLiteral("Expected spaces outside formatting: '%1'")
+                       .arg(savedContent)));
 }
 
 QTEST_MAIN(TestDiaryEditor)

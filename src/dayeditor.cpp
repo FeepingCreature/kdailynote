@@ -58,14 +58,20 @@ QString DayEditor::content() const
             // Build markdown with all applicable formats
             QString formattedText = text;
             
-            if (format.fontWeight() == QFont::Bold) {
-                formattedText = QStringLiteral("**") + formattedText + QStringLiteral("**");
-            }
-            if (format.fontItalic()) {
-                formattedText = QStringLiteral("*") + formattedText + QStringLiteral("*");
-            }
-            if (format.fontUnderline()) {
-                formattedText = QStringLiteral("_") + formattedText + QStringLiteral("_");
+            // Only apply formatting if the text isn't just whitespace
+            if (!text.trimmed().isEmpty()) {
+                if (format.fontWeight() == QFont::Bold) {
+                    formattedText = formattedText.trimmed();
+                    formattedText = QStringLiteral("**") + formattedText + QStringLiteral("**");
+                }
+                if (format.fontItalic()) {
+                    formattedText = formattedText.trimmed();
+                    formattedText = QStringLiteral("*") + formattedText + QStringLiteral("*");
+                }
+                if (format.fontUnderline()) {
+                    formattedText = formattedText.trimmed();
+                    formattedText = QStringLiteral("_") + formattedText + QStringLiteral("_");
+                }
             }
             
             markdown += formattedText;
