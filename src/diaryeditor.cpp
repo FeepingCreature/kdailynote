@@ -97,6 +97,12 @@ void DiaryEditor::toggleBold()
 {
     QTextCursor cursor = textCursor();
     if (cursor.hasSelection()) {
+        // Normalize selection direction
+        int start = cursor.selectionStart();
+        int end = cursor.selectionEnd();
+        cursor.setPosition(start);
+        cursor.setPosition(end, QTextCursor::KeepAnchor);
+        
         QTextCharFormat format;
         format.setFontWeight(cursor.charFormat().fontWeight() == QFont::Bold ?
                            QFont::Normal : QFont::Bold);
@@ -111,6 +117,12 @@ void DiaryEditor::toggleItalic()
 {
     QTextCursor cursor = textCursor();
     if (cursor.hasSelection()) {
+        // Normalize selection direction
+        int start = cursor.selectionStart();
+        int end = cursor.selectionEnd();
+        cursor.setPosition(start);
+        cursor.setPosition(end, QTextCursor::KeepAnchor);
+        
         QTextCharFormat format;
         format.setFontItalic(!cursor.charFormat().fontItalic());
         cursor.mergeCharFormat(format);
@@ -124,6 +136,12 @@ void DiaryEditor::toggleUnderline()
 {
     QTextCursor cursor = textCursor();
     if (cursor.hasSelection()) {
+        // Normalize selection direction
+        int start = cursor.selectionStart();
+        int end = cursor.selectionEnd();
+        cursor.setPosition(start);
+        cursor.setPosition(end, QTextCursor::KeepAnchor);
+        
         QTextCharFormat format;
         format.setFontUnderline(!cursor.charFormat().fontUnderline());
         cursor.mergeCharFormat(format);
