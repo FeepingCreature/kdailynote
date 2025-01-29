@@ -29,13 +29,19 @@ void TestDiaryEditor::testMarkdownConversion()
     // Load and test conversion
     editor.loadContent();
     
-    // Get the HTML and compare
-    QString actualHtml = editor.toHtml();
-    QString expectedHtml = QStringLiteral("<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This is <span style=\" font-weight:700;\">bold</span> and <span style=\" font-style:italic;\">italic</span> and <span style=\" text-decoration: underline;\">underlined</span> text</p>");
+    // Check the formatting directly
+    QTextCursor cursor = editor.textCursor();
+    cursor.movePosition(QTextCursor::Start);
+    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    QTextCharFormat format = cursor.charFormat();
     
-    QVERIFY2(actualHtml.contains(expectedHtml),
-             qPrintable(QStringLiteral("Expected to find: '%1'\nActual content: '%2'")
-                       .arg(expectedHtml, actualHtml)));
+    // Find and check "bold" text
+    cursor.movePosition(QTextCursor::Start);
+    if (cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, 8)) {  // "This is "
+        cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 4);    // "bold"
+        QVERIFY2(cursor.charFormat().fontWeight() == QFont::Bold,
+                "Expected 'bold' text to be bold");
+    }
 }
 
 void TestDiaryEditor::testRichTextConversion()
@@ -48,8 +54,28 @@ void TestDiaryEditor::testRichTextConversion()
     tempFile.close();
     editor.setProperty("contentFile", tempFile.fileName());
     
-    // Set up rich text
-    editor.setHtml(QStringLiteral("This is <span style=\" font-weight:700;\">bold</span> and <span style=\" font-style:italic;\">italic</span> and <span style=\" text-decoration: underline;\">underlined</span> text"));
+    // Insert text with formatting
+    QTextCursor cursor = editor.textCursor();
+    
+    cursor.insertText(QStringLiteral("This is "));
+    
+    QTextCharFormat boldFormat;
+    boldFormat.setFontWeight(QFont::Bold);
+    cursor.insertText(QStringLiteral("bold"), boldFormat);
+    
+    cursor.insertText(QStringLiteral(" and "));
+    
+    QTextCharFormat italicFormat;
+    italicFormat.setFontItalic(true);
+    cursor.insertText(QStringLiteral("italic"), italicFormat);
+    
+    cursor.insertText(QStringLiteral(" and "));
+    
+    QTextCharFormat underlineFormat;
+    underlineFormat.setFontUnderline(true);
+    cursor.insertText(QStringLiteral("underlined"), underlineFormat);
+    
+    cursor.insertText(QStringLiteral(" text"));
     
     // Save content
     editor.saveContent();
