@@ -220,34 +220,47 @@ void DiaryEditor::onNavigate(bool forward)
     qDebug() << "Navigating" << (forward ? "forward" : "backward") 
              << "from editor with date" << current->date();
 
-    QMapIterator<QDate, DayEditor*> it(editors);
-    // Find current editor's position
-    while (it.hasNext()) {
-        it.next();
+    // Find the current editor's date
+    QDate currentDate;
+    for (auto it = editors.begin(); it != editors.end(); ++it) {
         if (it.value() == current) {
-            qDebug() << "Found current editor at date" << it.key();
-            
-            // Move to next/previous editor
-            if (forward && it.hasNext()) {
-                it.next();
-                qDebug() << "Moving forward to" << it.key();
-                it.value()->setFocus();
-                QTextCursor cursor = it.value()->textCursor();
-                cursor.movePosition(QTextCursor::Start);
-                it.value()->setTextCursor(cursor);
-                ensureWidgetVisible(it.value());
-            } else if (!forward && it.hasPrevious()) {
-                it.previous();
-                qDebug() << "Moving backward to" << it.key();
-                it.value()->setFocus();
-                QTextCursor cursor = it.value()->textCursor();
-                cursor.movePosition(QTextCursor::End);
-                it.value()->setTextCursor(cursor);
-                ensureWidgetVisible(it.value());
-            } else {
-                qDebug() << "No" << (forward ? "next" : "previous") << "editor available";
-            }
+            currentDate = it.key();
             break;
+        }
+    }
+
+    if (!currentDate.isValid()) {
+        qDebug() << "Current editor not found in map";
+        return;
+    }
+
+    qDebug() << "Found current editor at date" << currentDate;
+    
+    // Get the next/previous editor
+    auto it = editors.find(currentDate);
+    if (forward) {
+        ++it;
+        if (it != editors.end()) {
+            qDebug() << "Moving forward to" << it.key();
+            it.value()->setFocus();
+            QTextCursor cursor = it.value()->textCursor();
+            cursor.movePosition(QTextCursor::Start);
+            it.value()->setTextCursor(cursor);
+            ensureWidgetVisible(it.value());
+        } else {
+            qDebug() << "No next editor available";
+        }
+    } else {
+        if (it != editors.begin()) {
+            --it;
+            qDebug() << "Moving backward to" << it.key();
+            it.value()->setFocus();
+            QTextCursor cursor = it.value()->textCursor();
+            cursor.movePosition(QTextCursor::End);
+            it.value()->setTextCursor(cursor);
+            ensureWidgetVisible(it.value());
+        } else {
+            qDebug() << "No previous editor available";
         }
     }
 }
