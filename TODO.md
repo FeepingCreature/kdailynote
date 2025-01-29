@@ -20,7 +20,7 @@ When you make a change that implements a TODO, remember to also change this file
 - [ ] Add configuration for window size/position memory
 - [ ] Implement proper theming integration with KDE
 - [ ] Add visual feedback for current format state
-- [ ] Add keyboard shortcuts for formatting (Ctrl+B, Ctrl+I, etc.)
+- [x] Add keyboard shortcuts for formatting (Ctrl+B, Ctrl+I, etc.)
 
 ## Features
 - [ ] Implement search functionality (Ctrl+F)

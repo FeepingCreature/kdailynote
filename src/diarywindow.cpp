@@ -49,12 +49,17 @@ void DiaryWindow::createActions()
     QToolBar *toolbar = findChild<QToolBar*>();
     if (!toolbar) return;
 
-    toolbar->addAction(QIcon::fromTheme(QIcon::ThemeIcon::FormatTextBold), tr("Bold"),
-                      editor, &DiaryEditor::toggleBold);
-    toolbar->addAction(QIcon::fromTheme(QIcon::ThemeIcon::FormatTextItalic), tr("Italic"),
-                      editor, &DiaryEditor::toggleItalic);
-    toolbar->addAction(QIcon::fromTheme(QIcon::ThemeIcon::FormatTextUnderline), tr("Underline"),
-                      editor, &DiaryEditor::toggleUnderline);
+    QAction *boldAction = toolbar->addAction(QIcon::fromTheme(QIcon::ThemeIcon::FormatTextBold), 
+                                           tr("Bold"), editor, &DiaryEditor::toggleBold);
+    boldAction->setShortcut(QKeySequence::Bold);  // Ctrl+B
+    
+    QAction *italicAction = toolbar->addAction(QIcon::fromTheme(QIcon::ThemeIcon::FormatTextItalic),
+                                             tr("Italic"), editor, &DiaryEditor::toggleItalic);
+    italicAction->setShortcut(QKeySequence::Italic);  // Ctrl+I
+    
+    QAction *underlineAction = toolbar->addAction(QIcon::fromTheme(QIcon::ThemeIcon::FormatTextUnderline),
+                                                tr("Underline"), editor, &DiaryEditor::toggleUnderline);
+    underlineAction->setShortcut(QKeySequence::Underline);  // Ctrl+U
 }
 
 void DiaryWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
