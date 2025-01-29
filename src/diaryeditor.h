@@ -36,10 +36,10 @@ private:
     bool hasSection(const QDate &date) const;
     void setupAutoSave();
     DayEditor* getCurrentEditor();
-    DayEditor* getLatestEditor() const;
 
 public:
     void addDateHeader(const QDate &date);
+    DayEditor* getLatestEditor() const;
     DayEditor* createDayEditor(const QDate &date);
 
 private Q_SLOTS:
