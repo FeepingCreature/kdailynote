@@ -212,17 +212,25 @@ DayEditor* DiaryEditor::getLatestEditor() const
 void DiaryEditor::onNavigate(bool forward)
 {
     DayEditor* current = getCurrentEditor();
-    if (!current)
+    if (!current) {
+        qDebug() << "No current editor found";
         return;
+    }
+
+    qDebug() << "Navigating" << (forward ? "forward" : "backward") 
+             << "from editor with date" << current->date();
 
     QMapIterator<QDate, DayEditor*> it(editors);
     // Find current editor's position
     while (it.hasNext()) {
         it.next();
         if (it.value() == current) {
+            qDebug() << "Found current editor at date" << it.key();
+            
             // Move to next/previous editor
             if (forward && it.hasNext()) {
                 it.next();
+                qDebug() << "Moving forward to" << it.key();
                 it.value()->setFocus();
                 QTextCursor cursor = it.value()->textCursor();
                 cursor.movePosition(QTextCursor::Start);
@@ -230,11 +238,14 @@ void DiaryEditor::onNavigate(bool forward)
                 ensureWidgetVisible(it.value());
             } else if (!forward && it.hasPrevious()) {
                 it.previous();
+                qDebug() << "Moving backward to" << it.key();
                 it.value()->setFocus();
                 QTextCursor cursor = it.value()->textCursor();
                 cursor.movePosition(QTextCursor::End);
                 it.value()->setTextCursor(cursor);
                 ensureWidgetVisible(it.value());
+            } else {
+                qDebug() << "No" << (forward ? "next" : "previous") << "editor available";
             }
             break;
         }
