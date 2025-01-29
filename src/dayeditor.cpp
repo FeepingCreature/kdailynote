@@ -119,9 +119,13 @@ void DayEditor::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    if (event->key() == Qt::Key_Up && textCursor().atStart()) {
-        Q_EMIT navigateToDate(m_date.addDays(-1));
-        return;
+    if (event->key() == Qt::Key_Up) {
+        QTextCursor cursor = textCursor();
+        QTextBlock currentBlock = cursor.block();
+        if (currentBlock == document()->firstBlock()) {
+            Q_EMIT navigateToDate(m_date.addDays(-1));
+            return;
+        }
     }
 
     if (event->key() == Qt::Key_Down && textCursor().atEnd()) {
