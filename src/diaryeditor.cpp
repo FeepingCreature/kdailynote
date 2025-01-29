@@ -4,6 +4,7 @@
 #include <QStandardPaths>
 #include <QFile>
 #include <QDir>
+#include <QRegularExpression>
 
 DiaryEditor::DiaryEditor(QWidget *parent)
     : KTextEdit(parent)

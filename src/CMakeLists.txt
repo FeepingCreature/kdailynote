@@ -13,3 +13,18 @@ target_link_libraries(kdailynote
 )
 
 install(TARGETS kdailynote ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+# Tests
+if(BUILD_TESTING)
+    add_executable(testdiaryeditor
+        tests/testdiaryeditor.cpp
+        diaryeditor.cpp
+    )
+    target_link_libraries(testdiaryeditor
+        Qt::Core
+        Qt::Widgets
+        Qt::Test
+        KF6::TextWidgets
+    )
+    add_test(NAME testdiaryeditor COMMAND testdiaryeditor)
+endif()
