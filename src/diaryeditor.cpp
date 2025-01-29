@@ -209,7 +209,7 @@ DayEditor* DiaryEditor::getLatestEditor() const
     return editors.last();
 }
 
-void DiaryEditor::onNavigateToDate(const QDate &date)
+void DiaryEditor::onNavigateToDate(const QDate &date, const QDate &fromDate)
 {
     if (!editors.contains(date)) {
         addDateHeader(date);
@@ -219,7 +219,8 @@ void DiaryEditor::onNavigateToDate(const QDate &date)
     if (DayEditor *editor = editors.value(date)) {
         editor->setFocus();
         QTextCursor cursor = editor->textCursor();
-        cursor.movePosition(date < QDate::currentDate() ? QTextCursor::End : QTextCursor::Start);
+        // When going back, position at end; when going forward, position at start
+        cursor.movePosition(date > m_date ? QTextCursor::Start : QTextCursor::End);
         editor->setTextCursor(cursor);
         ensureWidgetVisible(editor);
     }

@@ -20,7 +20,7 @@ public Q_SLOTS:
     void toggleUnderline();
 
 Q_SIGNALS:
-    void navigateToDate(const QDate &date);
+    void navigateToDate(const QDate &date, const QDate &fromDate);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
