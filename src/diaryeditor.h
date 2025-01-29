@@ -41,4 +41,5 @@ private:
 private Q_SLOTS:
     void onEditorChanged();
     void addDateHeader(const QDate &date);
+    DayEditor* createDayEditor(const QDate &date);
 };

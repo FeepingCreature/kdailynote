@@ -3,6 +3,7 @@
 #include <QTemporaryFile>
 #include <QTextStream>
 #include "../diaryeditor.h"
+#include "../dayeditor.h"
 
 class TestDiaryEditor : public QObject
 {
@@ -20,29 +21,31 @@ void TestDiaryEditor::testMarkdownConversion()
     // Create a temporary file with markdown content
     QTemporaryFile tempFile;
     tempFile.open();
-    tempFile.write(QStringLiteral("This is **bold** and *italic* and _underlined_ text").toUtf8());
+    tempFile.write(QStringLiteral("# 2024-01-01\nThis is **bold** and *italic* and _underlined_ text").toUtf8());
     tempFile.close();
     
     // Point editor to our test file
     editor.setContentFile(tempFile.fileName());
-    editor.document()->setModified(false);  // Reset modified state
+    editor.setProperty("skipDateHeader", true);
     
     // Load and test conversion
     editor.loadContent();
     
-    // Check the formatting directly
-    QTextCursor cursor = editor.textCursor();
-    cursor.movePosition(QTextCursor::Start);
-    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
-    QTextCharFormat format = cursor.charFormat();
+    // Get the editor for our test date
+    QDate testDate(2024, 1, 1);
+    DayEditor *dayEditor = editor.findChild<DayEditor*>();
+    QVERIFY2(dayEditor != nullptr, "Expected to find a DayEditor");
     
-    // Find and check "bold" text
+    // Check the formatting
+    QTextDocument *doc = dayEditor->document();
+    QTextCursor cursor(doc);
     cursor.movePosition(QTextCursor::Start);
-    if (cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, 8)) {  // "This is "
-        cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 4);    // "bold"
-        QVERIFY2(cursor.charFormat().fontWeight() == QFont::Bold,
-                "Expected 'bold' text to be bold");
-    }
+    
+    // Move to "bold" text position
+    cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, 8); // "This is "
+    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 4); // "bold"
+    QVERIFY2(cursor.charFormat().fontWeight() == QFont::Bold,
+             "Expected 'bold' text to be bold");
 }
 
 void TestDiaryEditor::testRichTextConversion()
@@ -54,56 +57,49 @@ void TestDiaryEditor::testRichTextConversion()
     tempFile.open();
     QString tempFileName = tempFile.fileName();
     tempFile.close();
-    qDebug() << "Created temp file:" << tempFileName;
-    editor.setContentFile(tempFileName);
     
-    // Disable auto date header for test
+    editor.setContentFile(tempFileName);
     editor.setProperty("skipDateHeader", true);
     
-    // Insert text with formatting
-    QTextCursor cursor = editor.textCursor();
+    // Create a day editor for testing
+    QDate testDate(2024, 1, 1);
+    editor.addDateHeader(testDate);
+    DayEditor *dayEditor = editor.createDayEditor(testDate);
+    QVERIFY2(dayEditor != nullptr, "Failed to create DayEditor");
+    
+    // Insert formatted text
+    QTextCursor cursor = dayEditor->textCursor();
     cursor.movePosition(QTextCursor::Start);
     
-    // Start with clean format
-    cursor.setCharFormat(QTextCharFormat());
-    
-    // Normal text
     cursor.insertText(QStringLiteral("This is "));
     
-    // Bold text
     QTextCharFormat boldFormat;
     boldFormat.setFontWeight(QFont::Bold);
     cursor.setCharFormat(boldFormat);
     cursor.insertText(QStringLiteral("bold"));
     
-    // Reset format
     cursor.setCharFormat(QTextCharFormat());
     cursor.insertText(QStringLiteral(" and "));
     
-    // Italic text
     QTextCharFormat italicFormat;
     italicFormat.setFontItalic(true);
     cursor.setCharFormat(italicFormat);
     cursor.insertText(QStringLiteral("italic"));
     
-    // Reset format
     cursor.setCharFormat(QTextCharFormat());
     cursor.insertText(QStringLiteral(" and "));
     
-    // Underlined text
     QTextCharFormat underlineFormat;
     underlineFormat.setFontUnderline(true);
     cursor.setCharFormat(underlineFormat);
     cursor.insertText(QStringLiteral("underlined"));
     
-    // Reset format and add final text
     cursor.setCharFormat(QTextCharFormat());
     cursor.insertText(QStringLiteral(" text"));
     
-    // Save content
+    // Save and verify content
     editor.saveContent();
     
-    // Read the saved file directly
     tempFile.open();
     QTextStream in(&tempFile);
     QString savedContent = in.readAll();

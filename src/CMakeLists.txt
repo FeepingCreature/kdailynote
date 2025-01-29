@@ -19,6 +19,7 @@ if(BUILD_TESTING)
     add_executable(testdiaryeditor
         tests/testdiaryeditor.cpp
         diaryeditor.cpp
+        dayeditor.cpp
     )
     target_link_libraries(testdiaryeditor
         Qt::Core
