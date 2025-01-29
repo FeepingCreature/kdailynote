@@ -5,12 +5,9 @@
 #include "../diaryeditor.h"
 #include "../dayeditor.h"
 
-class TestDiaryEditor : public DiaryEditor
+class TestDiaryEditor : public QObject
 {
     Q_OBJECT
-
-public:
-    TestDiaryEditor() : DiaryEditor(nullptr) {}
 
 private Q_SLOTS:
     void testMarkdownConversion();

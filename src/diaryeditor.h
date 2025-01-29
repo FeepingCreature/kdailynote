@@ -37,7 +37,7 @@ private:
     void setupAutoSave();
     DayEditor* getCurrentEditor();
 
-protected: // Make these protected for testing
+public:
     void addDateHeader(const QDate &date);
     DayEditor* createDayEditor(const QDate &date);
 
