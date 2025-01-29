@@ -105,10 +105,7 @@ QString DiaryEditor::serializeContent() const
     while (it.hasNext()) {
         it.next();
         result += QStringLiteral("# %1\n\n").arg(it.key().toString(Qt::ISODate));
-        QString content = it.value()->content();
-        // Ensure paragraphs are separated by double newlines
-        content.replace(QStringLiteral("\n"), QStringLiteral("\n\n"));
-        result += content;
+        result += it.value()->content();
         result += QStringLiteral("\n\n");
     }
     return result;

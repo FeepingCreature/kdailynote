@@ -73,7 +73,7 @@ QString DayEditor::content() const
         
         block = block.next();
         if (block.isValid())
-            markdown += QStringLiteral("\n");
+            markdown += QStringLiteral("\n\n");
     }
     
     return markdown;
