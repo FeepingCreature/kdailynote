@@ -7,6 +7,7 @@
 
 DiaryEditor::DiaryEditor(QWidget *parent)
     : KTextEdit(parent)
+    , autoSaveTimer(new QTimer(this))
 {
     setAcceptRichText(true);
 
@@ -17,6 +18,7 @@ DiaryEditor::DiaryEditor(QWidget *parent)
 
     loadContent();
     checkAndUpdateDate();
+    setupAutoSave();
 }
 
 void DiaryEditor::loadContent()
@@ -29,9 +31,15 @@ void DiaryEditor::loadContent()
 
 void DiaryEditor::saveContent()
 {
+    // Don't save if the content hasn't changed
+    if (!document()->isModified()) {
+        return;
+    }
+
     QFile file(contentFile);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         file.write(toPlainText().toUtf8());
+        document()->setModified(false);
     }
 }
 
@@ -120,4 +128,21 @@ void DiaryEditor::toggleUnderline()
     
     // Set the default format for future input
     setCurrentCharFormat(format);
+}
+
+void DiaryEditor::setupAutoSave()
+{
+    // Autosave every 30 seconds if there are changes
+    autoSaveTimer->setInterval(30000);
+    connect(autoSaveTimer, &QTimer::timeout, this, &DiaryEditor::saveContent);
+    autoSaveTimer->start();
+
+    // Also save when text changes after 3 seconds of inactivity
+    connect(this, &DiaryEditor::textChanged, this, &DiaryEditor::onTextChanged);
+}
+
+void DiaryEditor::onTextChanged()
+{
+    // Reset and restart the timer
+    autoSaveTimer->start();
 }

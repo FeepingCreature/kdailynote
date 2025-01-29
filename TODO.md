@@ -4,7 +4,7 @@ When you make a change that implements a TODO, remember to also change this file
 
 ## Critical/Next Steps
 - [ ] Implement markdown save/load (translate to/from text segments)
-- [ ] Autosave
+- [x] Autosave
 - [ ] Format bar (MVP bold, italic, underline, numbered list, bullet list)
 - [ ] Recognize Markdown formatting commands as they are entered
     (for instance, *italic*<-format italic when * is pressed)

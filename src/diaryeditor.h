@@ -2,6 +2,7 @@
 
 #include <KTextEdit>
 #include <QDate>
+#include <QTimer>
 
 class DiaryEditor : public KTextEdit
 {
@@ -23,8 +24,12 @@ protected:
 private:
     QString contentFile;
     QDate lastOpenedDate;
+    QTimer *autoSaveTimer;
 
     void checkAndUpdateDate();
+    void setupAutoSave();
+private Q_SLOTS:
+    void onTextChanged();
     void insertDateHeader(const QDate &date);
     bool checkListContext();
     void handleListContinuation();
