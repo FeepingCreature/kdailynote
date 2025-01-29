@@ -6,9 +6,6 @@ When you make a change that implements a TODO, remember to also change this file
 - [x] Implement markdown save/load (translate to/from text segments)
 - [x] Autosave
 - [x] Format bar (MVP bold, italic, underline)
-- [ ] Recognize Markdown formatting commands as they are entered
-    (for instance, *italic*<-format italic when * is pressed)
-- [ ] Handle text formatting state properly
 - [x] Add date header protection (prevent editing/deleting the timestamp itself)
 - [ ] Pretty up the date header
 - [x] Implement proper window positioning relative to system tray
@@ -20,10 +17,13 @@ When you make a change that implements a TODO, remember to also change this file
 - [ ] Implement proper theming integration with KDE
 - [ ] Add visual feedback for current format state (B icon toggled when in bold mode, etc)
 - [x] Add keyboard shortcuts for formatting (Ctrl+B, Ctrl+I, etc.)
+- [ ] Recognize Markdown formatting commands as they are entered
+    (for instance, *italic*<-format italic when * is pressed)
 
 ## Features
 - [ ] Numbered lists, bullet lists
 - [ ] Implement search functionality (Ctrl+F)
+- [ ] Day summary/title
 
 ## Technical Debt
 - [ ] Implement proper error handling for file operations
