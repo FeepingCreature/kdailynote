@@ -103,16 +103,21 @@ void DiaryEditor::saveContent()
                      << "Italic:" << format.fontItalic()
                      << "Underline:" << format.fontUnderline();
             
-            // Handle each format separately
+            // Build markdown with all applicable formats
+            QString formattedText = text;
+            
+            // Apply formats in a specific order
             if (format.fontWeight() == QFont::Bold) {
-                markdown += QStringLiteral("**") + text + QStringLiteral("**");
-            } else if (format.fontItalic()) {
-                markdown += QStringLiteral("*") + text + QStringLiteral("*");
-            } else if (format.fontUnderline()) {
-                markdown += QStringLiteral("_") + text + QStringLiteral("_");
-            } else {
-                markdown += text;
+                formattedText = QStringLiteral("**") + formattedText + QStringLiteral("**");
             }
+            if (format.fontItalic()) {
+                formattedText = QStringLiteral("*") + formattedText + QStringLiteral("*");
+            }
+            if (format.fontUnderline()) {
+                formattedText = QStringLiteral("_") + formattedText + QStringLiteral("_");
+            }
+            
+            markdown += formattedText;
         }
         
         block = block.next();

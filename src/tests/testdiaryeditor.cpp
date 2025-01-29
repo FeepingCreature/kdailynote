@@ -64,40 +64,40 @@ void TestDiaryEditor::testRichTextConversion()
     QTextCursor cursor = editor.textCursor();
     cursor.movePosition(QTextCursor::Start);
     
+    // Start with clean format
+    cursor.setCharFormat(QTextCharFormat());
+    
     // Normal text
     cursor.insertText(QStringLiteral("This is "));
     
     // Bold text
-    {
-        QTextCharFormat boldFormat;
-        boldFormat.setFontWeight(QFont::Bold);
-        cursor.mergeCharFormat(boldFormat);
-        cursor.insertText(QStringLiteral("bold"));
-        cursor.mergeCharFormat(QTextCharFormat()); // Reset format
-    }
+    QTextCharFormat boldFormat;
+    boldFormat.setFontWeight(QFont::Bold);
+    cursor.setCharFormat(boldFormat);
+    cursor.insertText(QStringLiteral("bold"));
     
+    // Reset format
+    cursor.setCharFormat(QTextCharFormat());
     cursor.insertText(QStringLiteral(" and "));
     
     // Italic text
-    {
-        QTextCharFormat italicFormat;
-        italicFormat.setFontItalic(true);
-        cursor.mergeCharFormat(italicFormat);
-        cursor.insertText(QStringLiteral("italic"));
-        cursor.mergeCharFormat(QTextCharFormat()); // Reset format
-    }
+    QTextCharFormat italicFormat;
+    italicFormat.setFontItalic(true);
+    cursor.setCharFormat(italicFormat);
+    cursor.insertText(QStringLiteral("italic"));
     
+    // Reset format
+    cursor.setCharFormat(QTextCharFormat());
     cursor.insertText(QStringLiteral(" and "));
     
     // Underlined text
-    {
-        QTextCharFormat underlineFormat;
-        underlineFormat.setFontUnderline(true);
-        cursor.mergeCharFormat(underlineFormat);
-        cursor.insertText(QStringLiteral("underlined"));
-        cursor.mergeCharFormat(QTextCharFormat()); // Reset format
-    }
+    QTextCharFormat underlineFormat;
+    underlineFormat.setFontUnderline(true);
+    cursor.setCharFormat(underlineFormat);
+    cursor.insertText(QStringLiteral("underlined"));
     
+    // Reset format and add final text
+    cursor.setCharFormat(QTextCharFormat());
     cursor.insertText(QStringLiteral(" text"));
     
     // Save content
