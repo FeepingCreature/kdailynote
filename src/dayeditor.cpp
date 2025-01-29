@@ -2,6 +2,7 @@
 #include <QKeyEvent>
 #include <QTextBlock>
 #include <QRegularExpression>
+#include <QApplication>
 
 DayEditor::DayEditor(const QDate &date, QWidget *parent)
     : KTextEdit(parent)
