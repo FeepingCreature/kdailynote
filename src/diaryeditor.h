@@ -3,6 +3,14 @@
 #include <KTextEdit>
 #include <QDate>
 #include <QTimer>
+#include <QMap>
+
+class DiarySection {
+public:
+    DiarySection() = default;
+    explicit DiarySection(const QString &content) : content(content) {}
+    QString content;
+};
 
 class DiaryEditor : public KTextEdit
 {
@@ -23,10 +31,13 @@ protected:
 
 private:
     QString contentFile;
-    QDate lastOpenedDate;
     QTimer *autoSaveTimer;
-
+    QMap<QDate, DiarySection> sections;
+    
     void checkAndUpdateDate();
+    void parseContent(const QString &content);
+    QString serializeContent() const;
+    bool hasSection(const QDate &date) const;
     void setupAutoSave();
 private Q_SLOTS:
     void onTextChanged();

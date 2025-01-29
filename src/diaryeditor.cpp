@@ -25,7 +25,38 @@ void DiaryEditor::loadContent()
 {
     QFile file(contentFile);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        setPlainText(QString::fromUtf8(file.readAll()));
+        QString content = QString::fromUtf8(file.readAll());
+        parseContent(content);
+        setPlainText(content);
+    }
+}
+
+void DiaryEditor::parseContent(const QString &content)
+{
+    sections.clear();
+    QStringList lines = content.split('\n');
+    QDate currentDate;
+    QString currentContent;
+    
+    for (const QString &line : lines) {
+        if (line.startsWith("# ")) {
+            // If we were building a section, save it
+            if (currentDate.isValid()) {
+                sections[currentDate] = DiarySection(currentContent.trimmed());
+            }
+            
+            // Parse new date header
+            QString dateStr = line.mid(2).trimmed();
+            currentDate = QDate::fromString(dateStr, Qt::ISODate);
+            currentContent.clear();
+        } else if (currentDate.isValid()) {
+            currentContent += line + '\n';
+        }
+    }
+    
+    // Save the last section
+    if (currentDate.isValid()) {
+        sections[currentDate] = DiarySection(currentContent.trimmed());
     }
 }
 
@@ -36,20 +67,40 @@ void DiaryEditor::saveContent()
         return;
     }
 
+    // Update sections from current content
+    parseContent(toPlainText());
+
     QFile file(contentFile);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        file.write(toPlainText().toUtf8());
+        file.write(serializeContent().toUtf8());
         document()->setModified(false);
     }
+}
+
+QString DiaryEditor::serializeContent() const
+{
+    QString result;
+    QMapIterator<QDate, DiarySection> it(sections);
+    while (it.hasNext()) {
+        it.next();
+        result += QStringLiteral("# %1\n").arg(it.key().toString(Qt::ISODate));
+        result += it.value().content;
+        result += QStringLiteral("\n\n");
+    }
+    return result;
 }
 
 void DiaryEditor::checkAndUpdateDate()
 {
     QDate currentDate = QDate::currentDate();
-    if (currentDate != lastOpenedDate) {
+    if (!hasSection(currentDate)) {
         insertDateHeader(currentDate);
-        lastOpenedDate = currentDate;
     }
+}
+
+bool DiaryEditor::hasSection(const QDate &date) const
+{
+    return sections.contains(date);
 }
 
 void DiaryEditor::insertDateHeader(const QDate &date)
