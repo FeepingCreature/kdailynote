@@ -2,6 +2,8 @@
 
 A simple diary that lives in your system tray.
 
+Contents are autosaved at `~/.local/share/kdailynote/diary.md`.
+
 ## Requirements
 
 - Qt 6.4 or later
