@@ -108,10 +108,10 @@ void DiaryWindow::positionWindow()
     
     QPoint pos;
     
-    // Position window near cursor but ensure it's visible
+    // Center window on cursor
     pos = cursorPos;
-    pos.setX(pos.x() - width()/2);  // Center horizontally on cursor
-    pos.setY(pos.y() - height() - 5);  // Place above cursor
+    pos.setX(pos.x() - width()/2);   // Center horizontally on cursor
+    pos.setY(pos.y() - height()/2);  // Center vertically on cursor
     
     // Ensure window stays within screen bounds
     if (pos.x() + width() > screenGeom.right()) {
