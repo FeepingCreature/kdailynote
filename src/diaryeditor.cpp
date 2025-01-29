@@ -122,6 +122,9 @@ void DiaryEditor::toggleItalic()
     QTextCharFormat format = cursor.charFormat();
     format.setFontItalic(!format.fontItalic());
     cursor.mergeCharFormat(format);
+    
+    // Set the default format for future input
+    setCurrentCharFormat(format);
 }
 
 void DiaryEditor::toggleUnderline()
@@ -130,4 +133,7 @@ void DiaryEditor::toggleUnderline()
     QTextCharFormat format = cursor.charFormat();
     format.setFontUnderline(!format.fontUnderline());
     cursor.mergeCharFormat(format);
+    
+    // Set the default format for future input
+    setCurrentCharFormat(format);
 }
