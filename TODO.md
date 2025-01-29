@@ -12,6 +12,7 @@ When you make a change that implements a TODO, remember to also change this file
 - [ ] Pretty up the date header
 - [ ] Add proper date header protection (prevent editing/deleting the timestamp itself)
 - [ ] Implement proper window positioning relative to system tray
+- [ ] Close on focus loss.
 - [ ] Add README.md
 - [ ] Add LICENSE (GPL3)
 
