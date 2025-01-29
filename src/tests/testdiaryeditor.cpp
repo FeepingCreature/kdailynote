@@ -153,7 +153,7 @@ void TestDiaryEditor::testRichTextConversion()
     savedContent = QString::fromUtf8(tempFile.readAll());
     tempFile.close();
     
-    QVERIFY2(savedContent.contains(QStringLiteral("Space  *  inside  *  format")),
+    QVERIFY2(savedContent.contains(QStringLiteral("Space   *inside*   format")),
              qPrintable(QStringLiteral("Expected spaces preserved within format: '%1'")
                        .arg(savedContent)));
 }

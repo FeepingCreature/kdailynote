@@ -58,11 +58,6 @@ QString DayEditor::content() const
             // Build markdown with all applicable formats
             QString formattedText = text;
             
-            qDebug() << "Processing fragment:" << text 
-                     << "Bold:" << (format.fontWeight() == QFont::Bold)
-                     << "Italic:" << format.fontItalic()
-                     << "Underline:" << format.fontUnderline();
-            
             // Handle formatting
             if (format.fontWeight() == QFont::Bold || 
                 format.fontItalic() || 
@@ -72,7 +67,6 @@ QString DayEditor::content() const
                 int i = 0;
                 while (i < text.length() && text[i].isSpace()) {
                     markdown += text[i++];
-                    qDebug() << "Added leading space:" << text[i-1];
                 }
                 
                 // If there's any non-whitespace content, apply formatting
@@ -89,8 +83,6 @@ QString DayEditor::content() const
                         QString middle = content.left(j + 1);
                         QString trailing = content.mid(j + 1);
                         
-                        qDebug() << "Content parts - Middle:" << middle << "Trailing:" << trailing;
-                        
                         if (format.fontWeight() == QFont::Bold) {
                             middle = QStringLiteral("**") + middle + QStringLiteral("**");
                         }
@@ -101,7 +93,6 @@ QString DayEditor::content() const
                             middle = QStringLiteral("_") + middle + QStringLiteral("_");
                         }
                         
-                        qDebug() << "Adding formatted text:" << middle + trailing;
                         markdown += middle + trailing;
                     } else {
                         markdown += content;  // All whitespace, no formatting needed
