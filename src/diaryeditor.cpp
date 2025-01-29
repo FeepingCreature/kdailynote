@@ -132,17 +132,18 @@ void DiaryEditor::toggleUnderline()
 
 void DiaryEditor::setupAutoSave()
 {
-    // Autosave every 30 seconds if there are changes
-    autoSaveTimer->setInterval(30000);
+    // Save after 3 seconds of inactivity
+    autoSaveTimer->setInterval(3000);
+    autoSaveTimer->setSingleShot(true);
     connect(autoSaveTimer, &QTimer::timeout, this, &DiaryEditor::saveContent);
-    autoSaveTimer->start();
-
-    // Also save when text changes after 3 seconds of inactivity
+    
+    // Reset timer on text changes
     connect(this, &DiaryEditor::textChanged, this, &DiaryEditor::onTextChanged);
 }
 
 void DiaryEditor::onTextChanged()
 {
-    // Reset and restart the timer
+    // Mark document as modified and restart inactivity timer
+    document()->setModified(true);
     autoSaveTimer->start();
 }
