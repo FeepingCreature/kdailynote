@@ -57,8 +57,12 @@ void TestDiaryEditor::testRichTextConversion()
     qDebug() << "Created temp file:" << tempFileName;
     editor.setContentFile(tempFileName);
     
+    // Disable auto date header for test
+    editor.setProperty("skipDateHeader", true);
+    
     // Insert text with formatting
     QTextCursor cursor = editor.textCursor();
+    cursor.movePosition(QTextCursor::Start);
     
     cursor.insertText(QStringLiteral("This is "));
     

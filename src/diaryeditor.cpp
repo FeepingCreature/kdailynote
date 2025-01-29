@@ -86,13 +86,10 @@ void DiaryEditor::saveContent()
 
     qDebug() << "Saving to file:" << contentFile;
 
-    // Update sections from current content
-    parseContent(toPlainText());
-
-    // Convert rich text to markdown
     QString markdown;
     QTextBlock block = document()->firstBlock();
     while (block.isValid()) {
+        QString blockText;
         QTextBlock::iterator it;
         for (it = block.begin(); !it.atEnd(); ++it) {
             QTextFragment fragment = it.fragment();
@@ -102,16 +99,18 @@ void DiaryEditor::saveContent()
             QTextCharFormat format = fragment.charFormat();
             QString text = fragment.text();
             
-            if (format.fontWeight() == QFont::Bold)
-                text = QStringLiteral("**") + text + QStringLiteral("**");
-            if (format.fontItalic())
-                text = QStringLiteral("*") + text + QStringLiteral("*");
+            // Apply formatting in reverse order to handle nested formats
             if (format.fontUnderline())
                 text = QStringLiteral("_") + text + QStringLiteral("_");
+            if (format.fontItalic())
+                text = QStringLiteral("*") + text + QStringLiteral("*");
+            if (format.fontWeight() == QFont::Bold)
+                text = QStringLiteral("**") + text + QStringLiteral("**");
                 
-            markdown += text;
+            blockText += text;
         }
         
+        markdown += blockText;
         block = block.next();
         if (block.isValid())
             markdown += QStringLiteral("\n");
@@ -139,6 +138,10 @@ QString DiaryEditor::serializeContent() const
 
 void DiaryEditor::checkAndUpdateDate()
 {
+    if (skipDateHeader()) {
+        return;
+    }
+    
     QDate currentDate = QDate::currentDate();
     if (!hasSection(currentDate)) {
         insertDateHeader(currentDate);

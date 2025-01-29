@@ -36,6 +36,7 @@ private:
     QMap<QDate, DiarySection> sections;
     
     void checkAndUpdateDate();
+    bool skipDateHeader() const { return property("skipDateHeader").toBool(); }
     void parseContent(const QString &content);
     QString serializeContent() const;
     bool hasSection(const QDate &date) const;
