@@ -2,6 +2,7 @@ add_executable(kdailynote
     main.cpp
     diarywindow.cpp
     diaryeditor.cpp
+    dayeditor.cpp
 )
 
 target_link_libraries(kdailynote
