@@ -25,9 +25,19 @@ void DiaryEditor::loadContent()
 {
     QFile file(contentFile);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QString content = QString::fromUtf8(file.readAll());
-        parseContent(content);
-        setPlainText(content);
+        QString markdown = QString::fromUtf8(file.readAll());
+        
+        // Convert markdown formatting to rich text
+        QString html = markdown;
+        html.replace(QRegularExpression(QStringLiteral("\\*\\*(.+?)\\*\\*")), 
+                    QStringLiteral("<b>\\1</b>"));
+        html.replace(QRegularExpression(QStringLiteral("\\*(.+?)\\*")), 
+                    QStringLiteral("<i>\\1</i>"));
+        html.replace(QRegularExpression(QStringLiteral("_(.+?)_")), 
+                    QStringLiteral("<u>\\1</u>"));
+        
+        setHtml(html);
+        parseContent(toPlainText());
     }
 }
 
@@ -70,9 +80,37 @@ void DiaryEditor::saveContent()
     // Update sections from current content
     parseContent(toPlainText());
 
+    // Convert rich text to markdown
+    QString markdown;
+    QTextBlock block = document()->firstBlock();
+    while (block.isValid()) {
+        QTextBlock::iterator it;
+        for (it = block.begin(); !it.atEnd(); ++it) {
+            QTextFragment fragment = it.fragment();
+            if (!fragment.isValid())
+                continue;
+
+            QTextCharFormat format = fragment.charFormat();
+            QString text = fragment.text();
+            
+            if (format.fontWeight() == QFont::Bold)
+                text = QStringLiteral("**") + text + QStringLiteral("**");
+            if (format.fontItalic())
+                text = QStringLiteral("*") + text + QStringLiteral("*");
+            if (format.fontUnderline())
+                text = QStringLiteral("_") + text + QStringLiteral("_");
+                
+            markdown += text;
+        }
+        
+        block = block.next();
+        if (block.isValid())
+            markdown += QStringLiteral("\n");
+    }
+
     QFile file(contentFile);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        file.write(serializeContent().toUtf8());
+        file.write(markdown.toUtf8());
         document()->setModified(false);
     }
 }
