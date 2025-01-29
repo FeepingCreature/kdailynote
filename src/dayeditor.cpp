@@ -58,23 +58,49 @@ QString DayEditor::content() const
             // Build markdown with all applicable formats
             QString formattedText = text;
             
-            // Only apply formatting if the text isn't just whitespace
-            if (!text.trimmed().isEmpty()) {
-                if (format.fontWeight() == QFont::Bold) {
-                    formattedText = formattedText.trimmed();
-                    formattedText = QStringLiteral("**") + formattedText + QStringLiteral("**");
+            // Handle formatting
+            if (format.fontWeight() == QFont::Bold || 
+                format.fontItalic() || 
+                format.fontUnderline()) {
+                
+                // Output leading whitespace before format markers
+                int i = 0;
+                while (i < text.length() && text[i].isSpace()) {
+                    markdown += text[i++];
                 }
-                if (format.fontItalic()) {
-                    formattedText = formattedText.trimmed();
-                    formattedText = QStringLiteral("*") + formattedText + QStringLiteral("*");
+                
+                // If there's any non-whitespace content, apply formatting
+                if (i < text.length()) {
+                    QString content = text.mid(i);
+                    
+                    // Check if remaining text is all whitespace
+                    int j = content.length() - 1;
+                    while (j >= 0 && content[j].isSpace()) {
+                        j--;
+                    }
+                    
+                    if (j >= 0) {  // Has non-whitespace content
+                        QString middle = content.left(j + 1);
+                        QString trailing = content.mid(j + 1);
+                        
+                        if (format.fontWeight() == QFont::Bold) {
+                            middle = QStringLiteral("**") + middle + QStringLiteral("**");
+                        }
+                        if (format.fontItalic()) {
+                            middle = QStringLiteral("*") + middle + QStringLiteral("*");
+                        }
+                        if (format.fontUnderline()) {
+                            middle = QStringLiteral("_") + middle + QStringLiteral("_");
+                        }
+                        
+                        markdown += middle + trailing;
+                    } else {
+                        markdown += content;  // All whitespace, no formatting needed
+                    }
                 }
-                if (format.fontUnderline()) {
-                    formattedText = formattedText.trimmed();
-                    formattedText = QStringLiteral("_") + formattedText + QStringLiteral("_");
-                }
+            } else {
+                markdown += formattedText;  // No formatting, output as-is
             }
-            
-            markdown += formattedText;
         }
         
         block = block.next();

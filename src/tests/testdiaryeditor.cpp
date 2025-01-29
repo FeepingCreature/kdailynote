@@ -135,6 +135,27 @@ void TestDiaryEditor::testRichTextConversion()
     QVERIFY2(savedContent.contains(QStringLiteral("Test **bold spaces** here")),
              qPrintable(QStringLiteral("Expected spaces outside formatting: '%1'")
                        .arg(savedContent)));
+                       
+    // Test that spaces within formatted text are preserved correctly
+    cursor.movePosition(QTextCursor::End);
+    cursor.insertText(QStringLiteral("\n\nSpace "));
+    
+    italicFormat.setFontItalic(true);
+    cursor.setCharFormat(italicFormat);
+    cursor.insertText(QStringLiteral("  inside  "));
+    
+    cursor.setCharFormat(QTextCharFormat());
+    cursor.insertText(QStringLiteral(" format"));
+    
+    editor.saveContent();
+    
+    tempFile.open();
+    savedContent = QString::fromUtf8(tempFile.readAll());
+    tempFile.close();
+    
+    QVERIFY2(savedContent.contains(QStringLiteral("Space *  inside  * format")),
+             qPrintable(QStringLiteral("Expected spaces preserved within format: '%1'")
+                       .arg(savedContent)));
 }
 
 QTEST_MAIN(TestDiaryEditor)
