@@ -20,6 +20,7 @@ When you make a change that implements a TODO, remember to also change this file
 - [x] Add keyboard shortcuts for formatting (Ctrl+B, Ctrl+I, etc.)
 - [ ] Recognize Markdown formatting commands as they are entered
     (for instance, *italic*<-format italic when * is pressed)
+- [ ] Allow reversing shown day order
 
 ## Features
 - [ ] Numbered lists, bullet lists
@@ -31,7 +32,7 @@ When you make a change that implements a TODO, remember to also change this file
 - [ ] Add logging
 - [ ] Add unit tests
 - [ ] Review memory management
-- [ ] Handle large files more efficiently
+- [ ] Handle large files efficiently
 
 ## Nice to Have
 - [ ] Multiple files
