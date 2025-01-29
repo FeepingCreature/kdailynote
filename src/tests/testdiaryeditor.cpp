@@ -25,7 +25,9 @@ void TestDiaryEditor::testMarkdownConversion()
     
     // Get the HTML and compare
     QString actualHtml = editor.toHtml();
-    QVERIFY(actualHtml.contains(expectedHtml));
+    QVERIFY2(actualHtml.contains(expectedHtml),
+             qPrintable(QString("Expected to find: '%1'\nActual content: '%2'")
+                       .arg(expectedHtml, actualHtml)));
 }
 
 void TestDiaryEditor::testRichTextConversion()
@@ -40,9 +42,15 @@ void TestDiaryEditor::testRichTextConversion()
     
     // Read the saved file and verify markdown format
     QString savedContent = editor.toPlainText();
-    QVERIFY(savedContent.contains(QStringLiteral("**bold**")));
-    QVERIFY(savedContent.contains(QStringLiteral("*italic*")));
-    QVERIFY(savedContent.contains(QStringLiteral("_underlined_")));
+    QVERIFY2(savedContent.contains(QStringLiteral("**bold**")),
+             qPrintable(QString("Expected to find '**bold**' in: '%1'")
+                       .arg(savedContent)));
+    QVERIFY2(savedContent.contains(QStringLiteral("*italic*")),
+             qPrintable(QString("Expected to find '*italic*' in: '%1'")
+                       .arg(savedContent)));
+    QVERIFY2(savedContent.contains(QStringLiteral("_underlined_")),
+             qPrintable(QString("Expected to find '_underlined_' in: '%1'")
+                       .arg(savedContent)));
 }
 
 QTEST_MAIN(TestDiaryEditor)
