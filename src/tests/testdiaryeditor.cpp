@@ -52,8 +52,10 @@ void TestDiaryEditor::testRichTextConversion()
     // Create a temporary file for output
     QTemporaryFile tempFile;
     tempFile.open();
+    QString tempFileName = tempFile.fileName();
     tempFile.close();
-    editor.setProperty("contentFile", tempFile.fileName());
+    qDebug() << "Created temp file:" << tempFileName;
+    editor.setContentFile(tempFileName);
     
     // Insert text with formatting
     QTextCursor cursor = editor.textCursor();

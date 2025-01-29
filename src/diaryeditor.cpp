@@ -80,8 +80,11 @@ void DiaryEditor::saveContent()
 {
     // Don't save if the content hasn't changed
     if (!document()->isModified()) {
+        qDebug() << "Document not modified, skipping save";
         return;
     }
+
+    qDebug() << "Saving to file:" << contentFile;
 
     // Update sections from current content
     parseContent(toPlainText());
