@@ -34,12 +34,12 @@ void DiaryEditor::loadContent()
 void DiaryEditor::parseContent(const QString &content)
 {
     sections.clear();
-    QStringList lines = content.split('\n');
+    QStringList lines = content.split(QStringLiteral("\n"));
     QDate currentDate;
     QString currentContent;
     
     for (const QString &line : lines) {
-        if (line.startsWith("# ")) {
+        if (line.startsWith(QStringLiteral("# "))) {
             // If we were building a section, save it
             if (currentDate.isValid()) {
                 sections[currentDate] = DiarySection(currentContent.trimmed());
@@ -50,7 +50,7 @@ void DiaryEditor::parseContent(const QString &content)
             currentDate = QDate::fromString(dateStr, Qt::ISODate);
             currentContent.clear();
         } else if (currentDate.isValid()) {
-            currentContent += line + '\n';
+            currentContent += line + QStringLiteral("\n");
         }
     }
     
