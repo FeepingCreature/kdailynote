@@ -36,6 +36,7 @@ private:
     bool hasSection(const QDate &date) const;
     void setupAutoSave();
     DayEditor* getCurrentEditor();
+    DayEditor* getLatestEditor() const;
 
 public:
     void addDateHeader(const QDate &date);

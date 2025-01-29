@@ -78,6 +78,14 @@ void DiaryWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
             show();
             raise();
             activateWindow();
+            
+            // Focus the latest day
+            if (auto latestEditor = editor->getLatestEditor()) {
+                latestEditor->setFocus();
+                QTextCursor cursor = latestEditor->textCursor();
+                cursor.movePosition(QTextCursor::End);
+                latestEditor->setTextCursor(cursor);
+            }
         }
     }
 }
@@ -85,7 +93,7 @@ void DiaryWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void DiaryWindow::positionWindow()
 {
     QRect trayIconGeom = trayIcon->geometry();
-    QPoint pos = trayIconGeom.topRight();
+    QPoint pos = trayIconGeom.topLeft();
 
     QScreen *screen = QGuiApplication::screenAt(pos);
     if (!screen) {
@@ -93,9 +101,18 @@ void DiaryWindow::positionWindow()
         pos = screen->geometry().topRight();
     }
 
-    // Position window above tray icon
-    pos.setY(pos.y() - height());
-    pos.setX(pos.x() - width());
+    // Check if the tray icon is on a vertical panel
+    bool isVertical = trayIconGeom.height() > trayIconGeom.width();
+
+    if (isVertical) {
+        // Position window to the right of the icon
+        pos.setX(trayIconGeom.right() + 5);
+        pos.setY(trayIconGeom.top());
+    } else {
+        // Position window above the icon
+        pos.setY(pos.y() - height());
+        pos.setX(pos.x() - width() + trayIconGeom.width());
+    }
 
     move(pos);
 }

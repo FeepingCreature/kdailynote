@@ -202,6 +202,13 @@ void DiaryEditor::onEditorChanged()
     autoSaveTimer->start();
 }
 
+DayEditor* DiaryEditor::getLatestEditor() const
+{
+    if (editors.isEmpty())
+        return nullptr;
+    return editors.last();
+}
+
 void DiaryEditor::onNavigateToDate(const QDate &date)
 {
     if (!editors.contains(date)) {
