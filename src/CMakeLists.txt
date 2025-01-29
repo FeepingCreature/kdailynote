@@ -23,7 +23,7 @@ if(BUILD_TESTING)
     target_link_libraries(testdiaryeditor
         Qt::Core
         Qt::Widgets
-        Qt::Test
+        Qt6::Test
         KF6::TextWidgets
     )
     add_test(NAME testdiaryeditor COMMAND testdiaryeditor)
