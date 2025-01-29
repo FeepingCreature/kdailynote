@@ -13,6 +13,12 @@ DayEditor::DayEditor(const QDate &date, QWidget *parent)
     setLineWrapMode(QTextEdit::WidgetWidth);
     setMinimumHeight(100);
     
+    // Use system colors
+    QPalette p = palette();
+    p.setColor(QPalette::Base, p.color(QPalette::Window));
+    p.setColor(QPalette::Text, p.color(QPalette::WindowText));
+    setPalette(p);
+    
     connect(document(), &QTextDocument::contentsChanged, this, &DayEditor::updateGeometry);
 }
 

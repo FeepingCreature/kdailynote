@@ -15,7 +15,7 @@ DiaryEditor::DiaryEditor(QWidget *parent)
     // Set up content file location
     QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir().mkpath(dataPath);
-    contentFile = dataPath + QStringLiteral("/diary.txt");
+    contentFile = dataPath + QStringLiteral("/diary.md");
 
     // Setup scroll area
     setWidgetResizable(true);
@@ -139,6 +139,11 @@ void DiaryEditor::addDateHeader(const QDate &date)
     font.setBold(true);
     font.setPointSize(font.pointSize() + 2);
     dateLabel->setFont(font);
+    
+    // Use system highlight color for date headers
+    QPalette p = dateLabel->palette();
+    p.setColor(QPalette::WindowText, p.color(QPalette::Highlight));
+    dateLabel->setPalette(p);
     
     // Add some vertical spacing
     layout->addSpacing(10);
