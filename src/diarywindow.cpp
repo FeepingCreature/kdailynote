@@ -4,6 +4,7 @@
 #include <QScreen>
 #include <QAction>
 #include <QApplication>
+#include <QMenu>
 
 DiaryWindow::DiaryWindow(QWidget *parent)
     : QWidget(parent, Qt::Tool | Qt::FramelessWindowHint)
@@ -14,8 +15,14 @@ DiaryWindow::DiaryWindow(QWidget *parent)
     createActions();
 
     // Set up system tray
+    // Create context menu
+    QMenu *trayMenu = new QMenu(this);
+    QAction *quitAction = trayMenu->addAction(tr("Quit"));
+    connect(quitAction, &QAction::triggered, qApp, &QApplication::quit);
+
     trayIcon = new QSystemTrayIcon(QIcon::fromTheme(QStringLiteral("accessories-text-editor")), this);
     trayIcon->setToolTip(tr("KDailyNote"));
+    trayIcon->setContextMenu(trayMenu);
     trayIcon->show();
 
     connect(trayIcon, &QSystemTrayIcon::activated,
