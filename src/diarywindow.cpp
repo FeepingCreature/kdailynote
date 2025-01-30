@@ -79,6 +79,9 @@ void DiaryWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
             raise();
             activateWindow();
             
+            // Check if we need a new day and create it
+            editor->checkAndUpdateDate();
+            
             // Focus and scroll to the latest day
             if (auto latestEditor = editor->getLatestEditor()) {
                 latestEditor->setFocus();

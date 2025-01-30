@@ -29,6 +29,7 @@ private:
     QVBoxLayout *layout;
     QMap<QDate, DayEditor*> editors;
     
+public:
     void checkAndUpdateDate();
     bool skipDateHeader() const { return property("skipDateHeader").toBool(); }
     void parseContent(const QString &content);

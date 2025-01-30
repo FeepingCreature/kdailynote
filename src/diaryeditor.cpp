@@ -26,7 +26,6 @@ DiaryEditor::DiaryEditor(QWidget *parent)
     layout->setContentsMargins(10, 10, 10, 10);
     
     loadContent();
-    checkAndUpdateDate();
     setupAutoSave();
 }
 
